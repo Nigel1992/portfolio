@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTestimonials();
     initContactForm();
     initMobileMenu();
+    initProjectFilters();
 });
 
 // ==================== Cursor Glow Effect ====================
@@ -342,6 +343,48 @@ window.addEventListener('load', () => {
     });
 });
 
+// ==================== Project Filtering ====================
+function initProjectFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            const filterValue = button.getAttribute('data-filter');
+            
+            // Filter projects
+            projectCards.forEach(card => {
+                const category = card.getAttribute('data-category');
+                
+                if (filterValue === 'all' || category === filterValue) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 10);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+    });
+    
+    // Initialize project cards with animation
+    projectCards.forEach((card, index) => {
+        card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+    });
+}
+
 // ==================== Performance Optimization ====================
 // Debounce scroll events
 function debounce(func, wait) {
@@ -385,33 +428,66 @@ style.textContent = `
         }
     }
     
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
     .mobile-menu {
         display: flex;
         flex-direction: column;
         position: absolute;
         top: 100%;
         right: 0;
-        background: rgba(22, 22, 31, 0.95);
+        background: rgba(22, 22, 31, 0.98);
         backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
+        border-radius: 16px;
         padding: 16px 0;
-        min-width: 200px;
-        gap: 8px;
+        min-width: 220px;
+        gap: 4px;
         z-index: 999;
         margin-top: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        animation: slideDown 0.3s ease;
     }
     
     .mobile-menu-link {
-        padding: 12px 24px;
+        padding: 14px 24px;
         color: var(--text-primary);
-        transition: all var(--transition-fast);
-        border-left: 2px solid transparent;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+        font-weight: 500;
+        position: relative;
+    }
+    
+    .mobile-menu-link::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 0;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+        transition: width 0.3s ease;
+        z-index: -1;
+    }
+    
+    .mobile-menu-link:hover::before {
+        width: 100%;
     }
     
     .mobile-menu-link:hover {
-        background: var(--bg-card-hover);
+        color: var(--text-primary);
         border-left-color: var(--accent-primary);
+        padding-left: 28px;
     }
 `;
 document.head.appendChild(style);
