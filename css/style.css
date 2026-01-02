@@ -1429,10 +1429,14 @@ section {
 }
 
 .contact-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-info.centered {
+    text-align: center;
+    max-width: 600px;
 }
 
 .contact-description {
@@ -1452,6 +1456,7 @@ section {
     display: flex;
     align-items: center;
     gap: 16px;
+    justify-content: center;
 }
 
 .contact-icon {

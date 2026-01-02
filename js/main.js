@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initCountUp();
     initSkillBars();
     initTestimonials();
-    initContactForm();
     initMobileMenu();
     initProjectFilters();
 });
@@ -221,57 +220,6 @@ function initTestimonials() {
     }, 5000);
 }
 
-// ==================== Contact Form ====================
-function initContactForm() {
-    const form = document.getElementById('contactForm');
-    
-    if (form) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const submitBtn = form.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>Sending...</span><i class="fas fa-spinner fa-spin"></i>';
-            
-            // Get form data
-            const formData = new FormData(form);
-            
-            try {
-                // Submit to FormSubmit.co
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                if (response.ok) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                    showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
-                    form.reset();
-                } else {
-                    const data = await response.json();
-                    if (data.error) {
-                        showNotification('Error: ' + data.error, 'error');
-                    } else {
-                        showNotification('There was an error sending your message. Please try again.', 'error');
-                    }
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                }
-            } catch (error) {
-                console.error('Form submission error:', error);
-                showNotification('Network error. Please check your connection and try again.', 'error');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-            }
-        });
-    }
-}
 
 // ==================== Notification System ====================
 function showNotification(message, type = 'info') {
