@@ -226,31 +226,49 @@ function initContactForm() {
     const form = document.getElementById('contactForm');
     
     if (form) {
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const formData = {
-                name: form.querySelector('#name').value,
-                email: form.querySelector('#email').value,
-                subject: form.querySelector('#subject').value,
-                message: form.querySelector('#message').value
-            };
-            
-            // Simulate form submission
             const submitBtn = form.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
+            const originalText = submitBtn.innerHTML;
             
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
+            submitBtn.innerHTML = '<span>Sending...</span><i class="fas fa-spinner fa-spin"></i>';
             
-            setTimeout(() => {
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalText;
+            // Get form data
+            const formData = new FormData(form);
+            
+            try {
+                // Submit to FormSubmit.co
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
                 
-                // Show success message
-                showNotification('Message sent successfully!', 'success');
-                form.reset();
-            }, 1500);
+                if (response.ok) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                    showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
+                    form.reset();
+                } else {
+                    const data = await response.json();
+                    if (data.error) {
+                        showNotification('Error: ' + data.error, 'error');
+                    } else {
+                        showNotification('There was an error sending your message. Please try again.', 'error');
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            } catch (error) {
+                console.error('Form submission error:', error);
+                showNotification('Network error. Please check your connection and try again.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
         });
     }
 }
@@ -260,17 +278,27 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
+    
+    let bgColor = '#3b82f6'; // default blue
+    if (type === 'success') {
+        bgColor = '#10b981'; // green
+    } else if (type === 'error') {
+        bgColor = '#ef4444'; // red
+    }
+    
     notification.style.cssText = `
         position: fixed;
         bottom: 20px;
         right: 20px;
         padding: 16px 24px;
-        background: ${type === 'success' ? '#10b981' : '#3b82f6'};
+        background: ${bgColor};
         color: white;
         border-radius: 8px;
         z-index: 10000;
         animation: slideIn 0.3s ease;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        word-wrap: break-word;
     `;
     
     document.body.appendChild(notification);
@@ -278,7 +306,7 @@ function showNotification(message, type = 'info') {
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => notification.remove(), 300);
-    }, 3000);
+    }, 5000);
 }
 
 // ==================== Mobile Menu ====================
