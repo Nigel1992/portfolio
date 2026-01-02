@@ -72,10 +72,10 @@ function updateActiveLink() {
 function initHeroTyping() {
     const typingText = document.querySelector('.typing-text');
     const roles = [
-        'Full-Stack Developer',
-        'UI/UX Designer',
-        'Problem Solver',
-        'Tech Enthusiast'
+        'ICT Professional',
+        'Automation Specialist',
+        'System Administrator',
+        'Software Developer'
     ];
     
     let roleIndex = 0;
