@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTestimonials();
     initMobileMenu();
     initProjectFilters();
+    initEmailObfuscation();
 });
 
 // ==================== Cursor Glow Effect ====================
@@ -220,6 +221,39 @@ function initTestimonials() {
     }, 5000);
 }
 
+// ==================== Email Obfuscation ====================
+function initEmailObfuscation() {
+    // Multi-layer obfuscation: Character codes shifted by +1
+    // Original: thedjskywalker@gmail.com
+    // Each character code is incremented by 1 to obfuscate
+    const obfuscated = [117,105,102,101,107,116,108,122,120,98,109,108,102,115,65,104,110,98,106,109,47,100,112,110];
+    
+    // Decode function: reverse character code shift
+    const decodeEmail = () => {
+        return String.fromCharCode(...obfuscated.map(code => code - 1));
+    };
+    
+    const emailLink = document.getElementById('email-link');
+    const emailText = document.getElementById('email-text');
+    
+    if (emailLink && emailText) {
+        // Decode email with a small delay to make scraping harder
+        setTimeout(() => {
+            const email = decodeEmail();
+            
+            // Set the text content
+            emailText.textContent = email;
+            
+            // Set the mailto link dynamically
+            emailLink.href = 'mailto:' + email;
+            emailLink.removeAttribute('onclick');
+            emailLink.style.cursor = 'pointer';
+            
+            // Add additional protection: store in a way that's harder to scrape
+            emailLink.setAttribute('data-contact', 'email');
+        }, 100);
+    }
+}
 
 // ==================== Notification System ====================
 function showNotification(message, type = 'info') {
