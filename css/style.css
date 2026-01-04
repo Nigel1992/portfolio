@@ -1777,6 +1777,10 @@ section {
         gap: 32px;
     }
 
+    .stat-item {
+        text-align: center;
+    }
+
     .projects-grid {
         grid-template-columns: 1fr;
     }
@@ -1789,6 +1793,12 @@ section {
         flex-direction: column;
         gap: 32px;
         text-align: center;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
     }
 
     .footer-bottom {
