@@ -5,7 +5,9 @@
 // ==================== Initialization ====================
 document.addEventListener('DOMContentLoaded', () => {
     initCursorGlow();
+    initCursorTrail();
     initNavigation();
+    initSmoothScrollTracking();
     initHeroTyping();
     initScrollAnimations();
     initCountUp();
@@ -501,3 +503,67 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+// ==================== Cursor Trail Effect ====================
+function initCursorTrail() {
+    const colors = ['#6366f1', '#8b5cf6', '#a855f7'];
+    let particles = [];
+    
+    document.addEventListener('mousemove', (e) => {
+        if (Math.random() > 0.7) {
+            createParticle(e.clientX, e.clientY, colors[Math.floor(Math.random() * colors.length)]);
+        }
+    });
+    
+    function createParticle(x, y, color) {
+        const particle = document.createElement('div');
+        particle.style.position = 'fixed';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        particle.style.width = '8px';
+        particle.style.height = '8px';
+        particle.style.borderRadius = '50%';
+        particle.style.backgroundColor = color;
+        particle.style.pointerEvents = 'none';
+        particle.style.zIndex = '9999';
+        particle.style.opacity = '0.6';
+        particle.style.boxShadow = `0 0 10px ${color}`;
+        
+        document.body.appendChild(particle);
+        
+        let vx = (Math.random() - 0.5) * 2;
+        let vy = (Math.random() - 0.5) * 2 - 2;
+        let life = 1;
+        
+        const animate = () => {
+            x += vx;
+            y += vy;
+            vy += 0.1;
+            life -= 0.02;
+            
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.opacity = life * 0.6;
+            
+            if (life > 0) {
+                requestAnimationFrame(animate);
+            } else {
+                particle.remove();
+            }
+        };
+        
+        animate();
+    }
+}
+
+// ==================== Smooth Scroll Link Tracking ====================
+function initSmoothScrollTracking() {
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href !== '#' && document.querySelector(href)) {
+                e.preventDefault();
+                document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+}
