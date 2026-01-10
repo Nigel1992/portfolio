@@ -6,6 +6,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     initCursorGlow();
     initCursorTrail();
+    initThemeToggle();
+    initMatrixRain();
+    initTerminalAnimator();
+    initConstellation();
+    initAsteroidGame();
     initNavigation();
     initSmoothScrollTracking();
     initHeroTyping();
@@ -566,4 +571,412 @@ function initSmoothScrollTracking() {
             }
         });
     });
+}
+
+// ==================== THEME TOGGLE ====================
+function initThemeToggle() {
+    const themeToggle = document.getElementById('themeToggle');
+    const htmlElement = document.documentElement;
+    
+    // Check for saved theme or default to dark
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    htmlElement.classList.toggle('light-theme', savedTheme === 'light');
+    updateThemeIcon(savedTheme === 'light');
+    
+    themeToggle.addEventListener('click', () => {
+        const isLight = htmlElement.classList.contains('light-theme');
+        htmlElement.classList.toggle('light-theme');
+        localStorage.setItem('theme', isLight ? 'dark' : 'light');
+        updateThemeIcon(!isLight);
+    });
+    
+    function updateThemeIcon(isLight) {
+        themeToggle.innerHTML = isLight ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    }
+}
+
+// ==================== MATRIX RAIN EFFECT ====================
+function initMatrixRain() {
+    const container = document.getElementById('matrixRain');
+    const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+    
+    function createMatrixChar() {
+        const char = document.createElement('div');
+        char.className = 'matrix-char';
+        char.textContent = chars[Math.floor(Math.random() * chars.length)];
+        char.style.left = Math.random() * 100 + '%';
+        char.style.top = Math.random() * -100 + 'px';
+        char.style.animationDuration = (Math.random() * 10 + 5) + 's';
+        container.appendChild(char);
+        
+        setTimeout(() => char.remove(), 15000);
+    }
+    
+    setInterval(createMatrixChar, 200);
+}
+
+// ==================== TERMINAL CODE ANIMATOR ====================
+function initTerminalAnimator() {
+    const codeSnippets = [
+        `// Automation Magic in PowerShell
+function Invoke-PortfolioAutomation {
+    [CmdletBinding()]
+    param(
+        [string]$Project
+    )
+    
+    Write-Host "🚀 Deploying $Project..."
+    
+    # Advanced automation logic
+    foreach ($task in @('build', 'test', 'deploy')) {
+        Invoke-Task -Name $task
+    }
+}
+
+Invoke-PortfolioAutomation -Project "AsteroPi"`,
+        
+        `// Python Kodi Addon Magic
+class PortfolioAddon(xbmcaddon.Addon):
+    def __init__(self):
+        super().__init__()
+        self.sync_projects()
+    
+    def sync_projects(self):
+        for project in self.get_github_repos():
+            self.display_project(project)
+            self.add_interactive_elements()
+    
+    def on_item_clicked(self, item):
+        self.launch_project_viewer(item)
+
+addon = PortfolioAddon()`,
+        
+        `// React Component Magic
+export const PortfolioShowcase = ({ projects }) => {
+  const [active, setActive] = useState(0);
+  
+  useEffect(() => {
+    loadProjects();
+  }, []);
+  
+  return (
+    <div className="showcase">
+      {projects.map((p, i) => (
+        <ProjectCard 
+          key={i} 
+          project={p}
+          isActive={i === active}
+        />
+      ))}
+    </div>
+  );
+};`
+    ];
+    
+    const terminalCode = document.getElementById('terminalCode');
+    let snippetIndex = 0;
+    
+    function typeCode() {
+        const snippet = codeSnippets[snippetIndex];
+        terminalCode.textContent = snippet;
+        snippetIndex = (snippetIndex + 1) % codeSnippets.length;
+    }
+    
+    typeCode();
+    setInterval(typeCode, 8000);
+}
+
+// ==================== CONSTELLATION GRAPH ====================
+function initConstellation() {
+    const canvas = document.getElementById('constellationCanvas');
+    const nodesContainer = document.getElementById('constellationNodes');
+    const ctx = canvas.getContext('2d');
+    
+    const nodes = [
+        { tech: 'JavaScript', icon: 'fab fa-js-square', x: 0.15, y: 0.3 },
+        { tech: 'Python', icon: 'fab fa-python', x: 0.85, y: 0.3 },
+        { tech: 'PowerShell', icon: 'fas fa-terminal', x: 0.5, y: 0.1 },
+        { tech: 'React', icon: 'fab fa-react', x: 0.25, y: 0.7 },
+        { tech: 'Node.js', icon: 'fab fa-node-js', x: 0.75, y: 0.7 },
+        { tech: 'Linux', icon: 'fab fa-linux', x: 0.1, y: 0.9 },
+        { tech: 'Windows', icon: 'fab fa-windows', x: 0.9, y: 0.9 },
+    ];
+    
+    let selectedNode = null;
+    const connections = {
+        'JavaScript': ['React', 'Node.js'],
+        'Python': ['Linux', 'Windows'],
+        'PowerShell': ['Windows', 'Linux'],
+        'React': ['JavaScript', 'Node.js'],
+        'Node.js': ['JavaScript', 'Linux'],
+        'Linux': ['Python', 'PowerShell'],
+        'Windows': ['PowerShell', 'Python']
+    };
+    
+    function resizeCanvas() {
+        const wrapper = canvas.parentElement;
+        canvas.width = wrapper.offsetWidth;
+        canvas.height = wrapper.offsetHeight;
+        drawConstellation();
+    }
+    
+    function drawConstellation() {
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-secondary');
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw connections
+        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-glow');
+        ctx.lineWidth = 1;
+        
+        nodes.forEach(node => {
+            connections[node.tech]?.forEach(connectedTech => {
+                const connNode = nodes.find(n => n.tech === connectedTech);
+                if (connNode) {
+                    ctx.beginPath();
+                    ctx.moveTo(node.x * canvas.width, node.y * canvas.height);
+                    ctx.lineTo(connNode.x * canvas.width, connNode.y * canvas.height);
+                    ctx.stroke();
+                }
+            });
+        });
+    }
+    
+    function createNodeElements() {
+        nodesContainer.innerHTML = '';
+        nodes.forEach(node => {
+            const nodeEl = document.createElement('div');
+            nodeEl.className = 'constellation-node';
+            nodeEl.style.left = (node.x * 100) + '%';
+            nodeEl.style.top = (node.y * 100) + '%';
+            
+            nodeEl.innerHTML = `
+                <div class="constellation-node-inner">
+                    <i class="${node.icon}"></i>
+                </div>
+                <div class="constellation-node-label">${node.tech}</div>
+            `;
+            
+            nodeEl.addEventListener('click', () => {
+                selectedNode = selectedNode === node.tech ? null : node.tech;
+                updateConnections();
+            });
+            
+            nodesContainer.appendChild(nodeEl);
+        });
+    }
+    
+    function updateConnections() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawConstellation();
+        
+        if (selectedNode) {
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary');
+            ctx.lineWidth = 2;
+            
+            const node = nodes.find(n => n.tech === selectedNode);
+            connections[selectedNode]?.forEach(connectedTech => {
+                const connNode = nodes.find(n => n.tech === connectedTech);
+                if (connNode) {
+                    ctx.beginPath();
+                    ctx.moveTo(node.x * canvas.width, node.y * canvas.height);
+                    ctx.lineTo(connNode.x * canvas.width, connNode.y * canvas.height);
+                    ctx.stroke();
+                }
+            });
+        }
+    }
+    
+    resizeCanvas();
+    createNodeElements();
+    window.addEventListener('resize', () => {
+        resizeCanvas();
+        createNodeElements();
+    });
+}
+
+// ==================== ASTEROID GAME ====================
+function initAsteroidGame() {
+    const startBtn = document.getElementById('gameStartBtn');
+    const gameModal = document.getElementById('gameModal');
+    const closeBtn = document.getElementById('gameModalClose');
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('gameScore');
+    const livesDisplay = document.getElementById('gameLives');
+    const gameOverScreen = document.getElementById('gameOverScreen');
+    const finalScoreDisplay = document.getElementById('finalScore');
+    const restartBtn = document.getElementById('gameRestartBtn');
+    
+    let gameActive = false;
+    let score = 0;
+    let lives = 3;
+    
+    function resizeCanvas() {
+        canvas.width = gameModal.offsetWidth;
+        canvas.height = gameModal.offsetHeight - 60;
+    }
+    
+    class Ship {
+        constructor() {
+            this.x = canvas.width / 2;
+            this.y = canvas.height - 50;
+            this.width = 30;
+            this.height = 40;
+            this.speed = 6;
+            this.vx = 0;
+        }
+        
+        draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.fillStyle = '#6366f1';
+            ctx.beginPath();
+            ctx.moveTo(0, -this.height / 2);
+            ctx.lineTo(-this.width / 2, this.height / 2);
+            ctx.lineTo(this.width / 2, this.height / 2);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+        
+        update() {
+            this.x += this.vx;
+            if (this.x < this.width / 2) this.x = this.width / 2;
+            if (this.x > canvas.width - this.width / 2) this.x = canvas.width - this.width / 2;
+        }
+    }
+    
+    class Asteroid {
+        constructor(x, y, size) {
+            this.x = x;
+            this.y = y;
+            this.size = size;
+            this.radius = size * 8;
+            this.vx = (Math.random() - 0.5) * 4;
+            this.vy = Math.random() * 3 + 1;
+        }
+        
+        draw() {
+            ctx.fillStyle = '#8b5cf6';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#6366f1';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+        
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+        }
+        
+        isOffscreen() {
+            return this.y > canvas.height + this.radius;
+        }
+    }
+    
+    let ship = new Ship();
+    let asteroids = [];
+    let gameLoop;
+    
+    const keys = {};
+    document.addEventListener('keydown', (e) => {
+        keys[e.key] = true;
+        if (e.key === 'ArrowLeft') ship.vx = -ship.speed;
+        if (e.key === 'ArrowRight') ship.vx = ship.speed;
+    });
+    
+    document.addEventListener('keyup', (e) => {
+        keys[e.key] = false;
+        if (e.key === 'ArrowLeft' && !keys['ArrowRight']) ship.vx = 0;
+        if (e.key === 'ArrowRight' && !keys['ArrowLeft']) ship.vx = 0;
+    });
+    
+    function spawnAsteroid() {
+        const size = Math.random() > 0.5 ? 1 : 2;
+        asteroids.push(new Asteroid(Math.random() * canvas.width, -20, size));
+    }
+    
+    function update() {
+        ship.update();
+        asteroids.forEach(asteroid => asteroid.update());
+        asteroids = asteroids.filter(a => !a.isOffscreen());
+        
+        // Check collisions
+        asteroids.forEach(asteroid => {
+            const dx = ship.x - asteroid.x;
+            const dy = ship.y - asteroid.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < asteroid.radius + ship.width / 2) {
+                lives--;
+                livesDisplay.textContent = lives;
+                asteroids = asteroids.filter(a => a !== asteroid);
+                
+                if (lives <= 0) {
+                    endGame();
+                }
+            }
+        });
+        
+        score++;
+        scoreDisplay.textContent = Math.floor(score / 10);
+    }
+    
+    function draw() {
+        ctx.fillStyle = 'rgba(10, 10, 15, 0.9)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ship.draw();
+        asteroids.forEach(a => a.draw());
+    }
+    
+    function gameUpdate() {
+        update();
+        draw();
+        gameLoop = requestAnimationFrame(gameUpdate);
+    }
+    
+    function startGame() {
+        gameActive = true;
+        gameOverScreen.style.display = 'none';
+        ship = new Ship();
+        asteroids = [];
+        score = 0;
+        lives = 3;
+        scoreDisplay.textContent = 0;
+        livesDisplay.textContent = lives;
+        resizeCanvas();
+        gameLoop = requestAnimationFrame(gameUpdate);
+        
+        // Spawn asteroids
+        const spawnInterval = setInterval(() => {
+            if (gameActive) {
+                spawnAsteroid();
+            } else {
+                clearInterval(spawnInterval);
+            }
+        }, 1000);
+    }
+    
+    function endGame() {
+        gameActive = false;
+        cancelAnimationFrame(gameLoop);
+        finalScoreDisplay.textContent = Math.floor(score / 10);
+        gameOverScreen.style.display = 'flex';
+    }
+    
+    startBtn.addEventListener('click', () => {
+        gameModal.classList.add('active');
+        startGame();
+    });
+    
+    closeBtn.addEventListener('click', () => {
+        gameModal.classList.remove('active');
+        gameActive = false;
+        cancelAnimationFrame(gameLoop);
+    });
+    
+    restartBtn.addEventListener('click', startGame);
 }

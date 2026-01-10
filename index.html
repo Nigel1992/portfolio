@@ -17,6 +17,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
+    <!-- Matrix Rain Background -->
+    <div class="matrix-rain" id="matrixRain"></div>
+
     <!-- Animated Background -->
     <div class="bg-animation">
         <div class="gradient-orb orb-1"></div>
@@ -41,6 +44,9 @@
                 <li><a href="#projects" class="nav-link">Projects</a></li>
             </ul>
             <div class="nav-actions">
+                <button class="theme-toggle" aria-label="Toggle theme" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
                 <button class="mobile-menu-btn" aria-label="Menu">
                     <span></span>
                     <span></span>
@@ -544,8 +550,75 @@
         </div>
     </section>
 
+    <!-- Terminal Code Animator Section -->
+    <section class="code-terminal">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-tag">Featured Code</span>
+                <h2 class="section-title">Real Code, Real Projects</h2>
+            </div>
+            <div class="terminal-wrapper">
+                <div class="terminal-header">
+                    <div class="terminal-buttons">
+                        <span class="term-btn term-close"></span>
+                        <span class="term-btn term-minimize"></span>
+                        <span class="term-btn term-maximize"></span>
+                    </div>
+                    <span class="terminal-title">portfolio.js — Automation Magic</span>
+                </div>
+                <div class="terminal-body">
+                    <pre><code class="terminal-code" id="terminalCode"></code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Tech Constellation Section -->
+    <section class="constellation">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-tag">Tech Stack</span>
+                <h2 class="section-title">Technology Connections</h2>
+                <p class="section-description">Click on technologies to see their relationships</p>
+            </div>
+            <div class="constellation-canvas-wrapper">
+                <canvas id="constellationCanvas"></canvas>
+                <div class="constellation-nodes" id="constellationNodes"></div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Game Section -->
+    <section class="game-section">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-tag">Interactive Fun</span>
+                <h2 class="section-title">Asteroid Dodge Game</h2>
+                <p class="section-description">Take a break and test your reflexes!</p>
+            </div>
+            <button class="btn btn-primary btn-lg" id="gameStartBtn">
+                <span>Play Game</span>
+                <i class="fas fa-gamepad"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Game Modal -->
+    <div class="game-modal" id="gameModal">
+        <div class="game-modal-content">
+            <button class="game-modal-close" id="gameModalClose">×</button>
+            <canvas id="gameCanvas"></canvas>
+            <div class="game-hud">
+                <div class="game-score">Score: <span id="gameScore">0</span></div>
+                <div class="game-lives">Lives: <span id="gameLives">3</span></div>
+            </div>
+            <div class="game-over-screen" id="gameOverScreen" style="display: none;">
+                <h2>Game Over!</h2>
+                <p>Final Score: <span id="finalScore">0</span></p>
+                <button class="btn btn-primary" id="gameRestartBtn">Play Again</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
