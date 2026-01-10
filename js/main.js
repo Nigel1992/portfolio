@@ -6,7 +6,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     initCursorGlow();
     initCursorTrail();
-    initThemeToggle();
     initMatrixRain();
     initTerminalAnimator();
     initConstellation();
@@ -571,28 +570,6 @@ function initSmoothScrollTracking() {
             }
         });
     });
-}
-
-// ==================== THEME TOGGLE ====================
-function initThemeToggle() {
-    const themeToggle = document.getElementById('themeToggle');
-    const htmlElement = document.documentElement;
-    
-    // Check for saved theme or default to dark
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    htmlElement.classList.toggle('light-theme', savedTheme === 'light');
-    updateThemeIcon(savedTheme === 'light');
-    
-    themeToggle.addEventListener('click', () => {
-        const isLight = htmlElement.classList.contains('light-theme');
-        htmlElement.classList.toggle('light-theme');
-        localStorage.setItem('theme', isLight ? 'dark' : 'light');
-        updateThemeIcon(!isLight);
-    });
-    
-    function updateThemeIcon(isLight) {
-        themeToggle.innerHTML = isLight ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-    }
 }
 
 // ==================== MATRIX RAIN EFFECT ====================
